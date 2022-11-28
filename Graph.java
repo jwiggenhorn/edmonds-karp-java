@@ -24,14 +24,51 @@ public class Graph {
     }
 
     public double maxFlow(int s, int t) {
-        // not implemented
+        double flow, newFlow = 0;
+
+        Path path = bfs(s, t);
+        // while (path.capacity != 0) {
+
+        // }
+
+        System.out.println("The augmenting path is " + path.path + " capacity = " + path.capacity);
         return 0;
     }
 
-    // return augmenting path (might make new type Path for this?)
-    public String bfs(int startNode, int endNode) {
-        // not implemented
-        return "";
+    public Path bfs(int startNode, int endNode) {
+        ArrayList<Integer> path = new ArrayList<Integer>();
+        ArrayList<Node> queue = new ArrayList<Node>();
+        double newFlow = Double.POSITIVE_INFINITY;
+
+        Node s = graph.get(startNode);
+        s.visited = true;
+        queue.add(s);
+        
+        while (queue.size() != 0) {
+            s = queue.remove(0);
+            
+            if (s.id == endNode) {
+                path.add(0, s.id);
+                while (s.parent != startNode) {
+                    path.add(0, s.parent);
+                    s = graph.get(s.parent);
+                }
+                path.add(0, startNode);
+            }
+
+            for (Edge e : s.edges) {
+                Node n = graph.get(e.v);
+                if (!n.visited) {
+                    n.visited = true;
+                    n.parent = e.u;
+                    queue.add(n);
+                    // might need to fix this next line
+                    newFlow = Math.min(e.weight, newFlow);
+                }
+
+            }
+        }
+        return new Path(path, newFlow);
     }
 
     public String toString() {

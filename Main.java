@@ -3,12 +3,12 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-class PrimWithPriorityQueue {
+class EdmondsKarp {
     public static void main(String[] args) {
         // change input file here if needed
         String inputFilename = "Project3Graph1.txt";
 
-        try { readGraph(inputFilename);
+        try { readGraph(inputFilename).maxFlow(0, 5);
         } catch (FileNotFoundException e) { System.err.println(e.getMessage()); }
     }
 
