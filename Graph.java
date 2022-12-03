@@ -19,24 +19,50 @@ public class Graph {
         graph.get(u).edges.add(new Edge(u, v, weight));
     }
 
-    public void changeEdge(int u, int v, double weight) {
-        // not implemented
+    public void reverseEdge(Edge e) {
+        //System.out.println(e);
+
+    }
+
+    public void augmentGraph(Path path) {
+        for (int i = path.path.size() - 1; i >= 0; i--) {
+            //if (path.path.get(i).id != path.path.get(i).parent) {
+                //System.out.println(path.path.get(i).id + " " + path.path.get(i).parent);
+                for (Edge e : path.path.get(i).edges) {
+                    System.out.println(e);
+                }
+                
+            //}
+        }
+
+        // for (Node n : path.path) {
+        //     System.out.println(n.id);
+        //     System.out.println(n.edges);
+        //     for (Edge e : n.edges) {
+        //         // System.out.println(e.u + " " + e.v);
+        //         if (e.weight == n.key)
+        //             reverseEdge(e);
+        //     }
+        // }
     }
 
     public double maxFlow(int s, int t) {
-        double flow, newFlow = 0;
+        double flow = 0, newFlow = 0;
 
         Path path = bfs(s, t);
         // while (path.capacity != 0) {
-
+            newFlow = path.capacity;
+            flow += newFlow;
+            augmentGraph(path);
+            //path = bfs(s, t);
         // }
 
-        System.out.println("The augmenting path is " + path.path + " capacity = " + path.capacity);
-        return 0;
+        System.out.println(path);
+        return flow;
     }
 
     public Path bfs(int startNode, int endNode) {
-        ArrayList<Integer> path = new ArrayList<Integer>();
+        ArrayList<Node> path = new ArrayList<Node>();
         ArrayList<Node> queue = new ArrayList<Node>();
         double newFlow = Double.POSITIVE_INFINITY;
 
@@ -44,16 +70,16 @@ public class Graph {
         s.visited = true;
         queue.add(s);
         
-        while (queue.size() != 0) {
+        while (!queue.isEmpty()) {
             s = queue.remove(0);
             
             if (s.id == endNode) {
-                path.add(0, s.id);
+                path.add(0, s);
                 while (s.parent != startNode) {
-                    path.add(0, s.parent);
                     s = graph.get(s.parent);
+                    path.add(0, s);
                 }
-                path.add(0, startNode);
+                path.add(0, graph.get(startNode));
             }
 
             for (Edge e : s.edges) {
@@ -65,7 +91,6 @@ public class Graph {
                     // might need to fix this next line
                     newFlow = Math.min(e.weight, newFlow);
                 }
-
             }
         }
         return new Path(path, newFlow);

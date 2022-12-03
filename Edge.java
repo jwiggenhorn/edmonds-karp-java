@@ -17,7 +17,7 @@ public class Edge implements Comparable<Edge> {
     public String toString() {
         String str = "";
 
-        str += v + " " + weight + " ";
+        str += u + " " + v + " " + weight + " ";
         
         return str;
     }
