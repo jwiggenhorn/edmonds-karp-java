@@ -1,4 +1,8 @@
-# Instructions to compile and run
+## About
+
+This is a Java implementation of the [Edmonds-Karp algorithm](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm) for computing the maximum flow in a flow network.
+
+## Instructions to compile and run
 
 First, compile with the `make` command.
 
