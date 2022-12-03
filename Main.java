@@ -5,11 +5,14 @@ import java.io.FileNotFoundException;
 
 class EdmondsKarp {
     public static void main(String[] args) {
-        // change input file here if needed
-        String inputFilename = "Project3Graph1.txt";
-
-        try { readGraph(inputFilename).maxFlow(0, 5);
-        } catch (FileNotFoundException e) { System.err.println(e.getMessage()); }
+        try { 
+            String inputFilename = args.length > 0 ? args[0] : "Project3Graph1.txt";
+            Graph g = readGraph(inputFilename);
+            double maxFlow = g.maxFlow(0, g.graph.size() - 1);
+            System.out.println("The max flow is " + maxFlow); 
+        } catch (FileNotFoundException e) { 
+            System.err.println(e.getMessage()); 
+        }
     }
 
     public static Graph readGraph(String filename) throws FileNotFoundException {

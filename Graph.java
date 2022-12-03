@@ -7,64 +7,36 @@ public class Graph {
         this.graph = graph;
     }
 
-    public Graph(int size) {
-        // create graph with predetermined size
-        graph = new ArrayList<Node>();
-        for (int i = 0; i < size; i++) {
-            graph.add(new Node(i));
-        }
-    }
-
     public void addEdge(int u, int v, double weight) {
         graph.get(u).edges.add(new Edge(u, v, weight));
     }
 
-    public void reverseEdge(Edge e) {
-        //System.out.println(e);
-
-    }
-
-    public void augmentGraph(Path path) {
-        for (int i = path.path.size() - 1; i >= 0; i--) {
-            //if (path.path.get(i).id != path.path.get(i).parent) {
-                //System.out.println(path.path.get(i).id + " " + path.path.get(i).parent);
-                for (Edge e : path.path.get(i).edges) {
-                    System.out.println(e);
-                }
-                
-            //}
+    public void changeEdge(Edge edge, double weight) {
+        for (Edge e : graph.get(edge.u).edges) {
+            if (e.u == edge.u && e.v == edge.v) {
+                edge.weight -= weight;
+            }
         }
-
-        // for (Node n : path.path) {
-        //     System.out.println(n.id);
-        //     System.out.println(n.edges);
-        //     for (Edge e : n.edges) {
-        //         // System.out.println(e.u + " " + e.v);
-        //         if (e.weight == n.key)
-        //             reverseEdge(e);
-        //     }
-        // }
+        graph.get(edge.u).edges.removeIf(e -> e.weight == 0);
     }
 
     public double maxFlow(int s, int t) {
-        double flow = 0, newFlow = 0;
-
-        Path path = bfs(s, t);
-        // while (path.capacity != 0) {
-            newFlow = path.capacity;
-            flow += newFlow;
-            augmentGraph(path);
-            //path = bfs(s, t);
-        // }
-
-        System.out.println(path);
-        return flow;
+        double maxFlow = 0;
+        Path path;
+        while ((path = bfs(s, t)).capacity != Double.POSITIVE_INFINITY) {
+            System.out.println(path);
+            maxFlow += path.capacity;
+            for (Edge e : path.edges) {
+                addEdge(e.v, e.u, path.capacity);
+                changeEdge(e, path.capacity);
+            }
+        }
+        return maxFlow;
     }
 
     public Path bfs(int startNode, int endNode) {
-        ArrayList<Node> path = new ArrayList<Node>();
+        ArrayList<Integer> path = new ArrayList<Integer>();
         ArrayList<Node> queue = new ArrayList<Node>();
-        double newFlow = Double.POSITIVE_INFINITY;
 
         Node s = graph.get(startNode);
         s.visited = true;
@@ -72,38 +44,49 @@ public class Graph {
         
         while (!queue.isEmpty()) {
             s = queue.remove(0);
-            
+
             if (s.id == endNode) {
-                path.add(0, s);
+                // found the sink, now trace back to source
                 while (s.parent != startNode) {
+                    path.add(0, s.id);
                     s = graph.get(s.parent);
-                    path.add(0, s);
                 }
-                path.add(0, graph.get(startNode));
+                path.add(0, s.id);
+                path.add(0, startNode);
             }
 
             for (Edge e : s.edges) {
                 Node n = graph.get(e.v);
                 if (!n.visited) {
+                    queue.add(n);
                     n.visited = true;
                     n.parent = e.u;
-                    queue.add(n);
-                    // might need to fix this next line
-                    newFlow = Math.min(e.weight, newFlow);
                 }
             }
         }
-        return new Path(path, newFlow);
+
+        double newFlow = Double.POSITIVE_INFINITY;
+        ArrayList<Edge> pathEdges = new ArrayList<Edge>();
+        int i = 0;
+        for (Node n : graph) {
+            for (Edge e: n.edges) {
+                if (i < path.size() - 1 && e.u == path.get(i) && e.v == path.get(i + 1)) {
+                    pathEdges.add(e);
+                    i++;
+                    newFlow = Math.min(e.weight, newFlow);
+                }
+            }
+            n.visited = false;
+        }
+        return new Path(pathEdges, newFlow);
     }
 
     public String toString() {
         String str = "";
-
         for (Node node : graph) {
             str += node.toString();
             str += "\n";
         }
-
         return str;
     }
 }

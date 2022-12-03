@@ -1,4 +1,4 @@
-public class Edge implements Comparable<Edge> {
+public class Edge {
     public int u;
     public int v;
     public double weight;
@@ -9,16 +9,7 @@ public class Edge implements Comparable<Edge> {
         this.weight = weight;
     }
 
-    @Override
-    public int compareTo(Edge that) {
-        return Double.compare(this.weight, that.weight);
-    }
-
     public String toString() {
-        String str = "";
-
-        str += u + " " + v + " " + weight + " ";
-        
-        return str;
+        return u + "->" + v;
     }
 }
