@@ -9,7 +9,6 @@ public class Path {
         this.capacity = capacity;
     }
 
-    @Override
     public String toString() {
         String str = "The augmenting path is ";
         for (Edge e : edges) {

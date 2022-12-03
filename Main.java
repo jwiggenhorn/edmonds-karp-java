@@ -15,7 +15,7 @@ class EdmondsKarp {
         }
     }
 
-    public static Graph readGraph(String filename) throws FileNotFoundException {
+    private static Graph readGraph(String filename) throws FileNotFoundException {
         try (Scanner fileInput = new Scanner(new File(filename))) {
             ArrayList<Node> nodes = new ArrayList<Node>();
 

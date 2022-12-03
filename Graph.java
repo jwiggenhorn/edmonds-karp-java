@@ -7,11 +7,11 @@ public class Graph {
         this.graph = graph;
     }
 
-    public void addEdge(int u, int v, double weight) {
+    private void addEdge(int u, int v, double weight) {
         graph.get(u).edges.add(new Edge(u, v, weight));
     }
 
-    public void changeEdge(Edge edge, double weight) {
+    private void changeEdge(Edge edge, double weight) {
         for (Edge e : graph.get(edge.u).edges) {
             if (e.u == edge.u && e.v == edge.v) {
                 edge.weight -= weight;
@@ -34,7 +34,7 @@ public class Graph {
         return maxFlow;
     }
 
-    public Path bfs(int startNode, int endNode) {
+    private Path bfs(int startNode, int endNode) {
         ArrayList<Integer> path = new ArrayList<Integer>();
         ArrayList<Node> queue = new ArrayList<Node>();
 
